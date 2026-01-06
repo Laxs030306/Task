@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Form</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff9a9e, #a18cd1);
+            font-family: Arial, sans-serif;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            width: 330px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #6a1b9a;
+        }
+
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 6px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 7px 14px;
+            margin-top: 8px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background: #6a1b9a;
+            color: white;
+        }
+
+        button:hover {
+            background: #4a148c;
+        }
+
+        li {
+            list-style: none;
+            margin: 10px 0;
+            font-size: 14px;
+            background: #f3e5f5;
+            padding: 8px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <h2>Student Form</h2>
+
+        <input type="text" id="name" placeholder="Enter Name">
+        <input type="text" id="email" placeholder="Enter Email">
+        <input type="text" id="phone" placeholder="Enter Phone Number">
+
+        <br>
+        <button onclick="add()">Add</button>
+
+        <ul id="list"></ul>
+    </div>
+
+<script>
+    let students = [];
+
+    function add() {
+        let name = document.getElementById("name").value.trim();
+        let email = document.getElementById("email").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+
+        // Name validation
+        if (name === "") {
+            alert("Please enter your name");
+            return;
+        }
+
+        // Gmail lowercase validation
+        if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) {
+            alert("Email must be lowercase and end with @gmail.com");
+            return;
+        }
+
+        // Phone number validation
+        if (!/^\d{10}$/.test(phone)) {
+            alert("Phone number must be exactly 10 digits");
+            return;
+        }
+
+        students.push({ name, email, phone });
+
+        document.getElementById("name").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phone").value = "";
+
+        show();
+    }
+
+    function show() {
+        let list = document.getElementById("list");
+        list.innerHTML = "";
+
+        students.forEach((s, i) => {
+            list.innerHTML += `
+                <li>
+                    <b>${s.name}</b><br>
+                    ${s.email}<br>
+                    ${s.phone}<br><br>
+                    <button onclick="edit(${i})">Edit</button>
+                    <button onclick="del(${i})">Delete</button>
+                </li>
+            `;
+        });
+    }
+
+    function edit(i) {
+        let newName = prompt("Enter name", students[i].name);
+        let newEmail = prompt("Enter email (lowercase)", students[i].email);
+        let newPhone = prompt("Enter phone number", students[i].phone);
+
+        if (
+            newName &&
+            /^[a-z0-9._%+-]+@gmail\.com$/.test(newEmail) &&
+            /^\d{10}$/.test(newPhone)
+        ) {
+            students[i].name = newName;
+            students[i].email = newEmail;
+            students[i].phone = newPhone;
+            show();
+        } else {
+            alert("Invalid data. Please check inputs.");
+        }
+    }
+
+    function del(i) {
+        if (confirm("Are you sure you want to delete this record?")) {
+            students.splice(i, 1);
+            show();
+        }
+    }
+</script>
+</body>
+</html>
